@@ -3,13 +3,11 @@ require_once '../dirHandler.php';
 require_once $GLOBALS['dirLibs'].'/external/meekrodb.2.2.class.php';
 require_once $GLOBALS['dirCore'].'/dbConfig.inc.php';
 
-$solution = $_GET['solution'];
-$project = $_GET['project'];
-$results = DB::query("SELECT FileName FROM CWM_Solution WHERE UserId=%? AND SolutionName=%? AND ProjectName=%?", $_COOKIE["uid"], $solution, $project);
+$projectId = $_GET['projectId'];
+$results = DB::query("SELECT * FROM CWM_File WHERE ProjectId=%? AND UserId=%?", $projectId, $_COOKIE["uid"]);
 $data = array();
 foreach ($results as $row) {
-  	array_push($data, $row['FileName']);
+  	array_push($data, array('name' => $row['Name'], 'solutionName' => $row['SolutionName'], 'projectName' => $row['ProjectName']));
 }
 echo json_encode($data);
-
 ?>

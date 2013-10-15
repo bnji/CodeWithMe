@@ -9,16 +9,16 @@
 	$solutionName = $_GET['solutionName'];
 	$projectName = $_GET['projectName'];
 	$fileName = $_GET['fileName'];
-	$solutionId = DB::queryFirstRow("SELECT Id FROM CWM_Solution WHERE SolutionName=%? AND ProjectName=%? AND FileName=%?", $solutionName, $projectName, $fileName);
-	$solutionId = $solutionId['Id'];
-	$share = DB::queryFirstRow("SELECT Url FROM CWM_Share WHERE SolutionId=%?", $solutionId);
+	$fileId = DB::queryFirstRow("SELECT Id FROM CWM_File WHERE SolutionName=%? AND ProjectName=%? AND Name=%?", $solutionName, $projectName, $fileName);
+	$fileId = $fileId['Id'];
+	$share = DB::queryFirstRow("SELECT Url FROM CWM_Share WHERE FileId=%?", $fileId);
 	if(is_null($share) == 1)
 	{
 		DB::insert('CWM_Share', array(
 			'Id' => 0, // auto increment
 			'Url' => $randomHashUrl,
 			'UserId' => $_COOKIE['uid'],
-			'SolutionId' => $solutionId
+			'FileId' => $fileId
 		));
 		echo $randomHashUrl;
 	}

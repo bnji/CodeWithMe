@@ -22,8 +22,8 @@ function LoadFile(solutionName, projectName, fileName) {
 function LoadUserSolutions() {
 	$.getJSON('core/controller/getUserSolutions.php', { 'uid': CWMCommon.GetUid() }).done(function(data) {
 		for (var i = 0; i < data.length; i++) {
-	    	//$("#solutionsTop").append("<li id='" + data[i].id + "'><a href='#'>"  + data[i].name + "</a></li>");
-	    	$("#solutionsTop").append("<li id='" + data[i].name + "'><a href='#'>"  + data[i].name + "</a></li>");
+			//$("#solutionsTop").append("<li id='" + data[i].id + "'><a href='#'>"  + data[i].name + "</a></li>");
+	    	$("#solutionsTop").append("<li id='" + data[i].id + "'><a href='#'>"  + data[i].name + "</a></li>");
 	    }
 	    if(data.length == 0) {
 	    	alert("Could not load solutions!");
@@ -36,34 +36,22 @@ function LoadUserSolutions() {
 	    	}
 			//var solutionName = $(this).attr("id");
 			//selectedSolutionId = $(this).attr("id");
+			var solutionId = $(this).attr('id');
 			var solutionName = $(this).text();
-			//alert(selectedSolutionId);
-			//alert(solutionName);
-			LoadSolutionProjects(solutionName);
+			LoadSolutionProjects(solutionId, solutionName);
 		});
 	});
 }
 
 // Loads project files
-function LoadSolutionProjects(solutionName) {
+function LoadSolutionProjects(solutionId, solutionName) {
 	// Set solution name in UI
 	$('#Solution').val(solutionName);
 	selectedSolution = solutionName;
-
-	$.getJSON('core/controller/readSolutionProjects.php', { 'solution': solutionName }).done(function(data) {
-		var options = [];
-		options.push("<option value=''>choose a project...</option>");
-		$("#projects2").html("");
+	$.getJSON('core/controller/readSolutionProjects.php', { 'solutionId': solutionId }).done(function(data) {
 		for (var i = 0; i < data.length; i++) {
-			options.push('<option value="',
-				data[i], '">',
-				data[i], '</option>');
-
-			GetProjectFiles(solutionName, data[i]);
-
+			GetProjectFiles(data[i].id, data[i].name);
 		}
-		$("#projects").html(options.join(''));
-
 		if(data.length == 0) {
 			alert("Could not load solution: " + solutionName);
 		}
@@ -72,20 +60,24 @@ function LoadSolutionProjects(solutionName) {
 		}
 			//options.append($("<option />").val().text(this));
 		//});
-});
+	});
 }
 
 // Loads project files
-function GetProjectFiles(solutionName, projectName) {
+function GetProjectFiles(projectId, projectName) {
 	selectedProject = projectName;
-	$.getJSON('core/controller/readProjectFiles.php', { 'solution': solutionName, 'project': projectName }).done(function(data) {
+	$("#projects2").html("");
+	$.getJSON('core/controller/readProjectFiles.php', { 'projectId': projectId }).done(function(data) {
 		//var listItems = [];
 		$("#projects2").append($('<li class="nav-header"><a href="#">' + projectName + '</a></li>'));
 
 		for(var j = 0; j < data.length; j++) {
-			var li = $('<li><a href="#">' + data[j] + '</a></li>');
+			var li = $('<li><a href="#">' + data[j].name + '</a></li>');
 			li.click(function() {
-				LoadFile(solutionName, projectName, $( this ).text());
+				//alert(JSON.stringify(data[$(this).index()-1]));
+				var d = data[$(this).index()-1];
+				//alert(d.solutionName + ", " + d.projectName);
+				LoadFile(d.solutionName, d.projectName, d.name);
 			});
 			//listItems.push($(li));
 			$("#projects2").append(li);
