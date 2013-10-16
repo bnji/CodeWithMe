@@ -18,6 +18,30 @@ function LoadFile(solutionName, projectName, fileName) {
 	});
 }
 
+function LoadFriendsSolutions()
+{
+	$.getJSON('core/controller/getFriendSolutions.php', { 'uid': CWMCommon.GetUid() }).done(function(data) {
+		//alert(JSON.stringify(data));
+		for (var i = 0; i < data.length; i++) {
+			$("#friendSolutionsTop").append("<li id='" + data[i].solutionId + "'><a href='#'>"  + data[i].solutionName + "</a></li>");
+	    }
+	    /*if(data.length == 0) {
+	    	alert("You don't have any solutions shared by your friends...");
+	    }*/
+	    $("#friendSolutionsTop li").click(function(e) {
+	    	var filename = location.pathname.substr(location.pathname.lastIndexOf("/")+1,location.pathname.length);
+	    	if(filename != "manage.php") {
+	    		//window.location = "manage.php";
+	    	}
+			//var solutionName = $(this).attr("id");
+			//selectedSolutionId = $(this).attr("id");
+			var solutionId = $(this).attr('id');
+			var solutionName = $(this).text();
+			LoadSolutionProjects(solutionId, solutionName);
+		});
+	});
+}
+
 // Loads user solutions
 function LoadUserSolutions() {
 	$.getJSON('core/controller/getUserSolutions.php', { 'uid': CWMCommon.GetUid() }).done(function(data) {
@@ -32,12 +56,13 @@ function LoadUserSolutions() {
 	    	//var fileName = window.location.replace(/^.*[\\\/]/, '')
 	    	var filename = location.pathname.substr(location.pathname.lastIndexOf("/")+1,location.pathname.length);
 	    	if(filename != "manage.php") {
-	    		window.location = "manage.php";
+	    		//window.location = "manage.php";
 	    	}
 			//var solutionName = $(this).attr("id");
 			//selectedSolutionId = $(this).attr("id");
 			var solutionId = $(this).attr('id');
 			var solutionName = $(this).text();
+			//alert(solutionId + ", " + solutionName);
 			LoadSolutionProjects(solutionId, solutionName);
 		});
 	});
@@ -67,7 +92,7 @@ function LoadSolutionProjects(solutionId, solutionName) {
 function GetProjectFiles(projectId, projectName) {
 	selectedProject = projectName;
 	$("#projects2").html("");
-	$.getJSON('core/controller/readProjectFiles.php', { 'projectId': projectId }).done(function(data) {
+	$.getJSON('core/controller/readProjectFiles.php', { 'uid': storage.get('uid'), 'projectId': projectId }).done(function(data) {
 		//var listItems = [];
 		$("#projects2").append($('<li class="nav-header"><a href="#">' + projectName + '</a></li>'));
 
@@ -90,7 +115,7 @@ function GetProjectFiles(projectId, projectName) {
 // Loads project files
 function LoadProjectFiles(solutionName, projectName) {
 	selectedProject = projectName;
-	$.getJSON('core/controller/readProjectFiles.php', { 'solution': solutionName, 'project': projectName }).done(function(data) {
+	$.getJSON('core/controller/readProjectFiles.php', { 'uid': storage.get('uid'), 'solution': solutionName, 'project': projectName }).done(function(data) {
 		var options = [];
 		options.push("<option value=''>choose a file...</option>");
 		//alert(data.length);

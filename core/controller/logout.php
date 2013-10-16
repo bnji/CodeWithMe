@@ -1,7 +1,10 @@
 <?php
+session_start();
 require_once '../../core/dirHandler.php';
 setcookie("uid", "", time() - 3600, "/");
 setcookie("uidHash", "", time() - 3600, "/");
+
+session_destroy();
 ?>
 <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>

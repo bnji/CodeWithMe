@@ -1,5 +1,7 @@
 <?php
+session_start();
 require_once '../dirHandler.php';
+$f3=require($GLOBALS['dirLibs'].'/external/fatfree/lib/base.php');
 require_once $GLOBALS['dirLibs'].'/external/meekrodb.2.2.class.php';
 require_once $GLOBALS['dirCore'].'/dbConfig.inc.php';
 require_once $GLOBALS['dirCore'].'/config.inc.php';
@@ -7,12 +9,14 @@ require_once $GLOBALS['dirCore'].'/common.inc.php';
 #echo $GLOBALS['dirRoot'];
 $uid = "";
 $email = $_POST['email'];
+$rememberMe = $_POST['rememberMe'] == 1;
 $emailHash = sha1($email);
 $hash = $_POST['hash'];
 $account = DB::queryFirstRow("SELECT * FROM CWM_User WHERE Email=%?", $email);
 $isNewuser = true;
 $isVerified = false;
 $isEmailValid = verifyEmail($email);
+$isFirstTime = 1;
 if($isEmailValid) {
 	// No user found
 	if(is_null($account))
@@ -22,7 +26,8 @@ if($isEmailValid) {
 			'Email' => $email,
 			'EmailHash' => $emailHash,
 			'Password' => $hash,
-			'Status' => 0
+			'Status' => 0,
+			'IsFirstTime' => $isFirstTime
 		));
 		$uid = DB::insertId();
 
@@ -48,13 +53,26 @@ if($isEmailValid) {
 		$uid = $account['Id'];
 		$isVerified = intval($account['Status']);
 		$isNewuser = false;
+		$isFirstTime = $account['IsFirstTime'];
 	}
+	$uidHash = sha1($uid);
+
 	$expire = time()+$cookie_expire;
 	#bool setcookie ( string $name [, string $value [, int $expire = 0 [, string $path [, string $domain [, bool $secure = false [, bool $httponly = false ]]]]]] )
 	//setcookie("uid", sha1($uid), $expire, "/", $_SERVER['HTTP_HOST'], false, true);
-	setcookie("uid", $uid, time()+3600, "/");
-	setcookie("uidHash", sha1($uid), time()+3600, "/");
+	if($rememberMe) {
+		$cookieTime = time()+3600;
+		setcookie("uid", $uid, $cookieTime, "/");
+		setcookie("uidHash", $uidHash, $cookieTime, "/");
+	}
+	else {
+		$_SESSION["uid"] = $uid;
+		$_SESSION["uidHash"] = $uidHash;
+  		$_SESSION["timeout"] = time();
+	}
+	#$f3->sync('SESSION');
+	#$f3->sync('COOKIE');
 }
-$resultData = array('uid' => $uid, 'email' => $email, 'isNew' => $isNewuser, 'isVerified' => $isVerified, 'isEmailValid' => $isEmailValid);
+$resultData = array('uid' => $uid, 'uidHash' => $uidHash, 'email' => $email, 'isNew' => $isNewuser, 'isVerified' => $isVerified, 'isEmailValid' => $isEmailValid, 'isFirstTime' => $isFirstTime);
 echo json_encode($resultData);
 ?>

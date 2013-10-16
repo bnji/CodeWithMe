@@ -7,6 +7,6 @@ $account = DB::queryFirstRow("SELECT Id, Status FROM CWM_User WHERE EmailHash=%?
 if(!is_null($account) && $account['Status'] == 0)
 {
 	DB::update('CWM_User', array('Status' => 1), "Id=%s", $account['Id']);
-	header("Location: ".$GLOBALS['urlRoot']."/manage.php");
+	header("Location: ".$GLOBALS['urlRoot']."/manage");
 }
 ?>

@@ -1,37 +1,34 @@
 <?
-    /**
-     *	Change this
-     **/
     $dirCoreBase = "/core";
-    $dirLibsBase = $dirAssetsBase."/libs";
+    $dirLibsBase = "/libs";
 
-    /*
-    DON'T change stuff below unless you know what you're doing
-    */
-
-    #GLOBAL $baseUrl;
     GlOBAL $dirRoot, $dirCore, $dirLibs;
     GLOBAL $urlRoot, $urlCore, $urlLibs;
 
-    $urlRoot = "";
     $pathinfoArray = explode('/', pathinfo(__DIR__)['dirname']);
-    for($i = 0; $i < count($pathinfoArray); $i++) {
-        if(strpos($_SERVER['REQUEST_URI'], $pathinfoArray[$i])) {
-            $urlRoot .= '/'.$pathinfoArray[$i];
+    foreach ($pathinfoArray as $pathInfo) {
+        if($pathInfo) {
+            if(strpos($_SERVER['REQUEST_URI'], $pathInfo)) {
+                $urlRoot .= '/'.$pathInfo;
+            }
         }
     }
-    $dirRoot = $_SERVER['DOCUMENT_ROOT'].$urlRoot;
+    $dirRoot = str_replace($dirCoreBase, "", $_SERVER['DOCUMENT_ROOT'].$urlRoot);
 
-    #$dirRoot = $basePath;
-    $dirRoot = str_replace($dirCoreBase, "", $dirRoot);
     $dirCore = $dirRoot.$dirCoreBase;
     $dirLibs = $dirRoot.$dirLibsBase;
 
-    #$urlRoot = $baseUrl;
     $urlCore = $urlRoot.$dirCoreBase;
     $urlLibs = $urlRoot.$dirLibsBase;
 
-    function replaceSlash($string) {
-        return substr($string, 0, strlen($string) - 0);
-    }
+    $tempProjectDir = "/CodeWithMe";
+    $tempDirBase = "/Users/beha/Documents/Mamp Sites".$tempProjectDir;
+
+    assert($urlRoot ==  $tempProjectDir);
+    assert($urlCore ==  $tempProjectDir."/core");
+    assert($urlLibs ==  $tempProjectDir."/libs");
+
+    assert($dirRoot ==  $tempDirBase);
+    assert($dirCore ==  $tempDirBase."/core");
+    assert($dirLibs ==  $tempDirBase."/libs");
 ?>

@@ -17,7 +17,7 @@
 		DB::insert('CWM_Share', array(
 			'Id' => 0, // auto increment
 			'Url' => $randomHashUrl,
-			'UserId' => $_COOKIE['uid'],
+			'UserId' => $_GET['uid'],
 			'FileId' => $fileId
 		));
 		echo $randomHashUrl;

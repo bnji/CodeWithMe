@@ -1,37 +1,67 @@
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
-/*!40014 SET FOREIGN_KEY_CHECKS=0 */;
 
--- Dumping structure for table benham_other.CWM_Share
-CREATE TABLE IF NOT EXISTS `CWM_Share` (
-  `Id` int(10) NOT NULL AUTO_INCREMENT,
-  `Url` char(11) NOT NULL,
-  `UserId` int(10) NOT NULL,
-  `SolutionId` int(10) NOT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS cwm_file (
+  Id int(10) NOT NULL AUTO_INCREMENT,
+  ProjectId int(11) NOT NULL,
+  `Name` varchar(255) NOT NULL,
+  `Data` mediumtext,
+  UserId int(11) NOT NULL,
+  SolutionName varchar(255) DEFAULT NULL,
+  ProjectName varchar(255) DEFAULT NULL,
+  PRIMARY KEY (Id)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=42 ;
 
--- Dumping structure for table benham_other.CWM_Solution
-CREATE TABLE IF NOT EXISTS `CWM_Solution` (
-  `Id` int(10) NOT NULL AUTO_INCREMENT,
-  `UserId` int(10) NOT NULL,
-  `SolutionName` varchar(255) DEFAULT NULL,
-  `ProjectName` varchar(255) DEFAULT NULL,
-  `FileName` varchar(255) NOT NULL,
-  `FileData` mediumtext,
-  PRIMARY KEY (`Id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS cwm_project (
+  Id int(10) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(255) NOT NULL,
+  Description varchar(255) DEFAULT NULL,
+  SolutionId int(11) NOT NULL,
+  PRIMARY KEY (Id)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=40 ;
 
--- Dumping structure for table benham_other.CWM_User
-CREATE TABLE IF NOT EXISTS `CWM_User` (
-  `Id` int(10) NOT NULL AUTO_INCREMENT,
-  `Email` varchar(255) NOT NULL,
-  `EmailHash` char(40) NOT NULL,
+CREATE TABLE IF NOT EXISTS cwm_share (
+  Id int(10) NOT NULL AUTO_INCREMENT,
+  Url char(11) NOT NULL,
+  UserId int(10) NOT NULL,
+  FileId int(10) NOT NULL,
+  PRIMARY KEY (Id)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
+
+CREATE TABLE IF NOT EXISTS cwm_sharedsolution (
+  Id int(10) NOT NULL AUTO_INCREMENT,
+  OwnerUserId int(10) DEFAULT NULL,
+  FriendUserId int(10) DEFAULT NULL,
+  SolutionId int(10) DEFAULT NULL,
+  PRIMARY KEY (Id)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+CREATE TABLE IF NOT EXISTS cwm_solution (
+  Id int(10) NOT NULL AUTO_INCREMENT,
+  UserId int(10) NOT NULL,
+  `Name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (Id)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=33 ;
+
+CREATE TABLE IF NOT EXISTS cwm_solutionproject (
+  Id int(10) NOT NULL AUTO_INCREMENT,
+  SolutionId int(10) NOT NULL,
+  ProjectId int(10) NOT NULL,
+  PRIMARY KEY (Id)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+CREATE TABLE IF NOT EXISTS cwm_user (
+  Id int(10) NOT NULL AUTO_INCREMENT,
+  Email varchar(255) NOT NULL,
+  EmailHash char(40) NOT NULL,
   `Password` varchar(255) NOT NULL,
   `Status` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`Id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  IsFirstTime tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (Id)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=29 ;
 
--- Data exporting was unselected.
-/*!40014 SET FOREIGN_KEY_CHECKS=1 */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

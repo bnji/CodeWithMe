@@ -1,38 +1,10 @@
 <?php
-require_once './core/dirHandler.php';
-require_once $GLOBALS['dirRoot'].'/libs/external/meekrodb.2.2.class.php';
-require_once './core/dbConfig.inc.php';
-require_once './core/auth.inc.php';
 if(!isUserLoggedIn())
 {
-	redirect('./');
+  redirect('logout');
 }
 require_once $GLOBALS['dirCore'].'/view/standard/header.inc.php';
 ?>
-<script type="text/javascript" src="<?php echo $GLOBALS['urlLibs']; ?>/external/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['urlLibs']; ?>/external/syntaxhighlighter_3.0.83/scripts/shBrushCSharp.js"></script>
-<link rel="stylesheet" type="text/css" href="<?php echo $GLOBALS['urlLibs']; ?>/external/syntaxhighlighter_3.0.83/styles/shCore.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo $GLOBALS['urlLibs']; ?>/external/syntaxhighlighter_3.0.83/styles/shThemeDefault.css" />
-<script src="<?php echo $GLOBALS['urlLibs']; ?>/external/spike-engine/js/spike-sdk.js.src.js" type="application/javascript" ></script>
-<link rel="stylesheet" href="<?php echo $GLOBALS['urlLibs']; ?>/external/spike-engine/css/styles2.css" type="text/css" />
-
-<!--
-<style>
-#projects-content {
-  position: absolute;
-  top: 0;
-  /* just used to show how to include the margin in the effect */
-  margin-top: 20px;
-  border-top: 1px solid purple;
-  padding-top: 19px;
-}
-
-#projects-content.fixed {
-  position: fixed;
-  top: 0;
-}
-</style>-->
-
 
 <?php require_once $GLOBALS['dirCore'].'/view/standard/navbarSignedIn.inc.php'; ?>
 
@@ -72,7 +44,7 @@ require_once $GLOBALS['dirCore'].'/view/standard/header.inc.php';
 
 <script>
 $(function(){
-	$.getJSON('core/controller/getMyShares.php', function(data) {
+	$.getJSON('core/controller/getMyShares.php', { 'uid': storage.get('uid') }).done(function(data) {
 		for(i = 0; i < data.length; i++) {
 			makeClone(data[i]);
 		}
@@ -89,7 +61,7 @@ $(function(){
 	    }, {
 	        controller: MVC.Controller({
 	        	Navigate: function() {
-	        		window.location = './viewSolutionFile.php?id=' + obj.url;
+	        		window.location = "<?php echo $GLOBALS['urlRoot']; ?>/share/file/" + obj.url;
 	        	},
 	            Delete: function() {
 	            	$.get('core/controller/deleteSolutionFileShare.php', { 'url': obj.url }).done(function(responseData) {

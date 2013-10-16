@@ -1,20 +1,17 @@
 <?php
-require_once './core/dirHandler.php';
-require_once $GLOBALS['dirRoot'].'/libs/external/meekrodb.2.2.class.php';
-require_once './core/dbConfig.inc.php';
-require_once './core/auth.inc.php';
 if(!isUserLoggedIn())
 {
-	redirect('./');
+  redirect('logout');
 }
 require_once $GLOBALS['dirCore'].'/view/standard/header.inc.php';
 ?>
 
 <?php require_once $GLOBALS['dirCore'].'/view/standard/navbarSignedIn.inc.php'; ?>
 
+<div class="container">
 <h1>Settings</h1>
 
-
+</div>
 
 <?php include $GLOBALS['dirCore'].'/view/standard/footer.inc.php'; ?>
 

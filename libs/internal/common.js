@@ -33,11 +33,12 @@ var CWMCommon = {
 	SignIn : function(data) { // data: uid, email, isNew
 		storage.set('uid', data['uid']);//CWMCommon.GetUidHashHex(data));
         storage.set('email', data['email']);
-        //alert(storage.get('uid'));
+        storage.set('isFirstTime', data['isFirstTime']);
 	},
 	SignOut : function(redirectUrl) {
 		storage.remove('uid');
 		storage.remove('email');
+        storage.remove('isFirstTime');
 		window.location = redirectUrl;
 	}
 }
