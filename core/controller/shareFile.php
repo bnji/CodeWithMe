@@ -20,6 +20,8 @@
 			'UserId' => $_GET['uid'],
 			'FileId' => $fileId
 		));
+		$shareId = DB::insertId();
+		DB::update('CWM_File', array('ShareId' => $shareId), "Id=%?", $fileId);
 		echo $randomHashUrl;
 	}
 	else {

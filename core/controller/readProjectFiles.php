@@ -7,7 +7,12 @@ $projectId = $_GET['projectId'];
 $results = DB::query("SELECT * FROM CWM_File WHERE ProjectId=%? AND UserId=%?", $projectId, $_GET['uid']);
 $data = array();
 foreach ($results as $row) {
-  	array_push($data, array('name' => $row['Name'], 'solutionName' => $row['SolutionName'], 'projectName' => $row['ProjectName']));
+	$shareId = $row['ShareId'];
+	$shareUrl = "";
+	if(!is_null($shareId)) {
+		$shareUrl = DB::queryOneField("Url", "SELECT * FROM CWM_Share WHERE FileId=%?", $row['Id']);
+	}
+  	array_push($data, array('name' => $row['Name'], 'solutionName' => $row['SolutionName'], 'projectName' => $row['ProjectName'], 'shareUrl' => $shareUrl));
 }
 echo json_encode($data);
 ?>

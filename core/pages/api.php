@@ -1,9 +1,13 @@
 <?php
+echo isUserLoggedIn();
+return;
 if(isUserLoggedIn())
 {
 	#checkSession();
-	redirect('manage');
+	#redirect('manage');
 }
+var_dump($GLOBALS['dirCore']);
+return;
 require_once $GLOBALS['dirCore'].'/view/standard/header.inc.php';
 ?>
 <link href="<?php echo $GLOBALS['urlCore']; ?>/view/standard/css/sign-in.css" rel="stylesheet" />

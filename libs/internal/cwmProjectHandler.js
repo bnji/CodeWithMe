@@ -31,7 +31,7 @@ function LoadFriendsSolutions()
 	    $("#friendSolutionsTop li").click(function(e) {
 	    	var filename = location.pathname.substr(location.pathname.lastIndexOf("/")+1,location.pathname.length);
 	    	if(filename != "manage.php") {
-	    		//window.location = "manage.php";
+	    		window.location = "manage";
 	    	}
 			//var solutionName = $(this).attr("id");
 			//selectedSolutionId = $(this).attr("id");
@@ -56,7 +56,7 @@ function LoadUserSolutions() {
 	    	//var fileName = window.location.replace(/^.*[\\\/]/, '')
 	    	var filename = location.pathname.substr(location.pathname.lastIndexOf("/")+1,location.pathname.length);
 	    	if(filename != "manage.php") {
-	    		//window.location = "manage.php";
+	    		//window.location = "manage";
 	    	}
 			//var solutionName = $(this).attr("id");
 			//selectedSolutionId = $(this).attr("id");
@@ -71,11 +71,12 @@ function LoadUserSolutions() {
 // Loads project files
 function LoadSolutionProjects(solutionId, solutionName) {
 	// Set solution name in UI
-	$('#Solution').val(solutionName);
+	//$('#Solution').val(solutionName);
 	selectedSolution = solutionName;
 	$.getJSON('core/controller/readSolutionProjects.php', { 'solutionId': solutionId }).done(function(data) {
+	$('#projects-content .solution-title').html(solutionName + " (" + data.length + ")");
 		for (var i = 0; i < data.length; i++) {
-			GetProjectFiles(data[i].id, data[i].name);
+			GetProjectFiles(data[i].id);
 		}
 		if(data.length == 0) {
 			alert("Could not load solution: " + solutionName);
@@ -88,28 +89,65 @@ function LoadSolutionProjects(solutionId, solutionName) {
 	});
 }
 
+
+
+function makeClone(data)
+{
+
+	var obj = $('#project-panel-template').ModelView({
+		projectName: data[0].projectName
+    }, {
+        controller: MVC.Controller({
+        	Navigate: function() {
+        		window.location = "<?php echo $GLOBALS['urlRoot']; ?>/share/file/" + obj.url;
+        	}
+        }),
+        clone: {
+            id: "#" + $.now(),
+            append: function(elem) {
+            	$('.panel-group').append(elem);
+                $(elem).show();
+            }
+        }
+    });
+    return obj;
+}
+
 // Loads project files
-function GetProjectFiles(projectId, projectName) {
-	selectedProject = projectName;
-	$("#projects2").html("");
+function GetProjectFiles(projectId) {
+	//$("#projects2").html("");
+	$(".panel-group").html("");
 	$.getJSON('core/controller/readProjectFiles.php', { 'uid': storage.get('uid'), 'projectId': projectId }).done(function(data) {
-		//var listItems = [];
-		$("#projects2").append($('<li class="nav-header"><a href="#">' + projectName + '</a></li>'));
+
+		objClone = makeClone(data);
+
+		var linkName = "collapseBody" + Math.floor((Math.random()*1000)+1);
+		$(objClone.GetViewId() + " .accordion-toggle").attr("href", "#" + linkName);
+		$(objClone.GetViewId() + " .panel-collapse").attr("id", linkName);
+		//$(objClone.GetViewId() + " .panel-body").html("hey");
+
+		//$(objClone.GetViewId() + " .collapse").collapse();
+
+		var projectName = data[0].projectName;
+		var solutionName = data[0].solutionName;
+		//$(objClone.GetViewId() + " .panel-body #projects2").append($('<li class="nav-header"><a href="#">' + projectName + '</a></li>'));
 
 		for(var j = 0; j < data.length; j++) {
-			var li = $('<li><a href="#">' + data[j].name + '</a></li>');
-			li.click(function() {
-				//alert(JSON.stringify(data[$(this).index()-1]));
-				var d = data[$(this).index()-1];
-				//alert(d.solutionName + ", " + d.projectName);
-				LoadFile(d.solutionName, d.projectName, d.name);
+			var shareLink = "";
+			var shareUrl = data[j].shareUrl;
+			if(shareUrl.length > 0) {
+				shareLink = ' - <a href=share/file/'+shareUrl+'>shared</a>';
+			}
+			var li = $('<li id='+ j +' class="list-group-item"><a href="#">' + data[j].name + '</a>' + shareLink + '</li>');
+			li.click(function(e) {
+				//alert( $(this).attr('id') + " - " + JSON.stringify(data[$(this).attr('id')]) );
+				var index = $(this).attr('id');
+				LoadFile(data[index].solutionName, data[index].projectName, data[index].name);
 			});
-			//listItems.push($(li));
-			$("#projects2").append(li);
-			//if(j == 0) listItems.push('<li class="active"><a href="#">' + data[j] + '</a></li>');
-			//else listItems.push('<li><a href="#">' + data[j] + '</a></li>');
+			$(objClone.GetViewId() + " #projectFiles").append(li);
 		}
 	});
+	$(".collapse").collapse();
 }
 
 // Loads project files

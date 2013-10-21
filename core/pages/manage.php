@@ -18,8 +18,9 @@ require_once $GLOBALS['dirCore'].'/view/standard/header.inc.php';
 <!--<div id="mainContent" class="container">-->
 	<div class="row">
 		<div id="projects-content" class="col-md-2">
-			<ul id="projects2" class="nav nav-list"></ul>
-		</div>
+      <div class="panel-group" id="accordion">
+      </div>
+	  </div>
 		<div class="col-md-7">
 			<label class="checkbox">
         <input id="useAutoUpdate" type="checkbox" checked> Use auto update?
@@ -40,6 +41,31 @@ require_once $GLOBALS['dirCore'].'/view/standard/header.inc.php';
 		</div>
 	</div>
 <!--</div><!--/.container -->
+
+<!--template start-->
+<div id="project-content-template" style="display:none;" class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><span id="projectName"></span></h3>
+  </div>
+  <div class="panel-body">
+    <ul id="projects2" class="nav nav-list"></ul>
+  </div>
+</div>
+
+<div id="project-panel-template" style="display:none;" class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      <a id="projectName" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#">
+
+      </a>
+    </h3>
+  </div>
+  <!--<div class="panel-body"> </div>-->
+  <div class="panel-collapse collapse in">
+    <ul id="projectFiles" class="list-group"></ul>
+  </div>
+</div>
+<!--//template end-->
 
 <script src="<?php echo $GLOBALS['urlLibs']; ?>/internal/chatServer.js" type="text/javascript" ></script>
 
