@@ -1,67 +1,103 @@
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+-- Create syntax for TABLE 'CWM_ApiKey'
+CREATE TABLE `CWM_ApiKey` (
+  `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `PublicKey` char(40) CHARACTER SET latin1 NOT NULL,
+  `PrivateKey` char(40) CHARACTER SET latin1 NOT NULL,
+  `AppName` varchar(25) CHARACTER SET latin1 NOT NULL,
+  `AppDescription` varchar(255) CHARACTER SET latin1 NOT NULL,
+  `IsActive` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS cwm_file (
-  Id int(10) NOT NULL AUTO_INCREMENT,
-  ProjectId int(11) NOT NULL,
+-- Create syntax for TABLE 'CWM_ApiKeySession'
+CREATE TABLE `CWM_ApiKeySession` (
+  `ApiKeyId` int(10) NOT NULL,
+  `LastAccess` datetime NOT NULL,
+  `UserId` int(10) NOT NULL,
+  `TokenValue` varchar(40) CHARACTER SET latin1 NOT NULL,
+  PRIMARY KEY (`ApiKeyId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Create syntax for TABLE 'CWM_File'
+CREATE TABLE `CWM_File` (
+  `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `ProjectId` int(11) NOT NULL,
+  `Name` varchar(255) CHARACTER SET latin1 NOT NULL,
+  `Data` mediumtext CHARACTER SET latin1,
+  `UserId` int(11) NOT NULL,
+  `SolutionName` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
+  `ProjectName` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
+  `ShareId` int(10) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+
+-- Create syntax for TABLE 'CWM_Project'
+CREATE TABLE `CWM_Project` (
+  `Id` int(10) NOT NULL AUTO_INCREMENT,
   `Name` varchar(255) NOT NULL,
-  `Data` mediumtext,
-  UserId int(11) NOT NULL,
-  SolutionName varchar(255) DEFAULT NULL,
-  ProjectName varchar(255) DEFAULT NULL,
-  PRIMARY KEY (Id)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=42 ;
+  `Description` varchar(255) NOT NULL,
+  `SolutionId` int(11) NOT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS cwm_project (
-  Id int(10) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(255) NOT NULL,
-  Description varchar(255) DEFAULT NULL,
-  SolutionId int(11) NOT NULL,
-  PRIMARY KEY (Id)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=40 ;
+-- Create syntax for TABLE 'CWM_Share'
+CREATE TABLE `CWM_Share` (
+  `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `Url` char(11) CHARACTER SET latin1 NOT NULL,
+  `UserId` int(10) NOT NULL,
+  `FileId` int(10) NOT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS cwm_share (
-  Id int(10) NOT NULL AUTO_INCREMENT,
-  Url char(11) NOT NULL,
-  UserId int(10) NOT NULL,
-  FileId int(10) NOT NULL,
-  PRIMARY KEY (Id)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
+-- Create syntax for TABLE 'CWM_SharedSolution'
+CREATE TABLE `CWM_SharedSolution` (
+  `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `OwnerUserId` int(10) DEFAULT NULL,
+  `FriendUserId` int(10) DEFAULT NULL,
+  `SolutionId` int(10) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS cwm_sharedsolution (
-  Id int(10) NOT NULL AUTO_INCREMENT,
-  OwnerUserId int(10) DEFAULT NULL,
-  FriendUserId int(10) DEFAULT NULL,
-  SolutionId int(10) DEFAULT NULL,
-  PRIMARY KEY (Id)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+-- Create syntax for TABLE 'CWM_Solution'
+CREATE TABLE `CWM_Solution` (
+  `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `UserId` int(10) NOT NULL,
+  `Name` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS cwm_solution (
-  Id int(10) NOT NULL AUTO_INCREMENT,
-  UserId int(10) NOT NULL,
-  `Name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (Id)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=33 ;
+-- Create syntax for TABLE 'CWM_SolutionProject'
+CREATE TABLE `CWM_SolutionProject` (
+  `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `SolutionId` int(10) NOT NULL,
+  `ProjectId` int(10) NOT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS cwm_solutionproject (
-  Id int(10) NOT NULL AUTO_INCREMENT,
-  SolutionId int(10) NOT NULL,
-  ProjectId int(10) NOT NULL,
-  PRIMARY KEY (Id)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+-- Create syntax for TABLE 'CWM_SourceDraft'
+CREATE TABLE `CWM_SourceDraft` (
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `Content` longtext CHARACTER SET latin1 NOT NULL,
+  `Language` varchar(50) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `Url` varchar(11) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS cwm_user (
-  Id int(10) NOT NULL AUTO_INCREMENT,
-  Email varchar(255) NOT NULL,
-  EmailHash char(40) NOT NULL,
-  `Password` varchar(255) NOT NULL,
+-- Create syntax for TABLE 'CWM_User'
+CREATE TABLE `CWM_User` (
+  `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `Email` varchar(255) CHARACTER SET latin1 NOT NULL,
+  `EmailHash` char(40) CHARACTER SET latin1 NOT NULL,
+  `Password` varchar(255) CHARACTER SET latin1 NOT NULL,
   `Status` tinyint(1) NOT NULL DEFAULT '0',
-  IsFirstTime tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (Id)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=29 ;
+  `IsFirstTime` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- Create syntax for TABLE 'CWM_UserApiKey'
+CREATE TABLE `CWM_UserApiKey` (
+  `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `UserId` int(10) NOT NULL,
+  `ApiKeyId` int(10) NOT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;

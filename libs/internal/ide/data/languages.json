@@ -1,0 +1,49 @@
+{
+	"csharp" : {
+		"name" : "C#",
+		"type" : "compile"
+	},
+	"vbnet" : {
+		"name" : "VB.NET",
+		"type" : "compile"
+	},
+	"c" : {
+		"name" : "C",
+		"type" : "compile"
+	},
+	"cpp" : {
+		"name" : "C++",
+		"type" : "compile"
+	},
+	"ruby" : {
+		"name" : "Ruby",
+		"type" : "compile"
+	},
+	"perl" : {
+		"name" : "Perl",
+		"type" : "compile"
+	},
+	"php" : {
+		"name" : "PHP",
+		"type" : "compile"
+	},
+	"java" : {
+		"name" : "Java",
+		"type" : "compile"
+	},
+	"javascript" : {
+		"name" : "JavaScript",
+		"type" : "web",
+		"ext" : "js"
+	},
+	"nodejs" : {
+		"name" : "NodeJs",
+		"type" : "web",
+		"ext" : "js"
+	},
+	"processing" : {
+		"name" : "Processing",
+		"type" : "web",
+		"ext" : "pde"
+	}
+}

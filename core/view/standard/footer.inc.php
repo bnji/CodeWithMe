@@ -7,8 +7,11 @@
 	<!--<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha1.js"></script>-->
 	<script src="<?php echo $GLOBALS['urlLibs']; ?>/external/json/json2.js"></script>
 	<script src="<?php echo $GLOBALS['urlLibs']; ?>/external/simplemvc/simple.mvc.js"></script>
+	<script src="<?php echo $GLOBALS['urlLibs']; ?>/external/bootstrap-select/bootstrap-select.min.js"></script>
+	<script src="<?php echo $GLOBALS['urlLibs']; ?>/external/underscore-min.js"></script>
 	<script src="<?php echo $GLOBALS['urlLibs']; ?>/internal/cwmProjectHandler.js"></script>
 	<script src="<?php echo $GLOBALS['urlLibs']; ?>/internal/common.js"></script>
 	<script src="<?php echo $GLOBALS['urlLibs']; ?>/internal/guide.js"></script>
+	<script src="<?php echo $GLOBALS['urlLibs']; ?>/internal/ide/compileLib.js"></script>
 </body>
 <html>

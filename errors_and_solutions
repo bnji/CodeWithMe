@@ -1,0 +1,6 @@
+### ERROR ###
+"Error occurred during initialization of VM
+Unable to load native library: libjava.jnilib"
+### SOLUTION ###
+Disable DYLD_LIBRARY_PATH on Mac OSX:
+http://stackoverflow.com/questions/7650013/java-1-6-broken-when-called-by-background-symfony-task

@@ -13,11 +13,34 @@ require_once $GLOBALS['dirCore'].'/view/standard/header.inc.php';
 		<h1>CodeWithMe</h1>
 		<br />
 		<h2 class="form-signin-heading">Please sign in</h2>
-		<input id="email" type="text" class="form-control" placeholder="Email address" value="hammerbenjamin@gmail.com" autofocus />
-		<input id="password" type="password" class="form-control" placeholder="Password" value="1234" />
-		<label class="checkbox">
-			<input id="rememberMe" type="checkbox"> Remember me
-		</label>
+
+		<div class="row">
+
+		  <div class="col-md-10">
+		  	<input id="email" type="text" class="form-control" placeholder="Email address" value="hammerbenjamin@gmail.com" autofocus />
+		  </div>
+		  <div class="col-md-2">
+
+		  </div>
+
+		  <div class="col-md-10">
+		  	<input id="password" type="password" class="form-control" placeholder="Password" value="1234" />
+		  </div>
+		  <div class="col-md-2">
+		  	<span id="isPasswordValid" class="glyphicon glyphicon-minus-sign" style="font-size:200%"></span>
+		  </div>
+
+		  <div class="col-md-10">
+		  	<label class="checkbox">
+				<input id="rememberMe" type="checkbox"> Remember me
+			</label>
+		  </div>
+		  <div class="col-md-2">
+		  	<!---->
+		  </div>
+
+		</div>
+
 		<button id="sign-in" class="btn btn-lg btn-primary btn-block" data-loading-text="Loading..." type="button"></button>
 		<br />
 		<br />
@@ -38,12 +61,20 @@ $(function() {
 	  window.location = "manage.php";
 	}, null));*/
 
+// Variables
 var email = "";
-
 var signInBtnText = "Sign in or Create account";
+var signInBtn = $("#sign-in");
+var emailElement = $('#email');
+var passwordElement = $('#password');
 
-$("#sign-in").text(signInBtnText);
+// Setup
+signInBtn.text(signInBtnText);
 
+updatePasswordIcon();
+
+
+// Functions
 $("#email, #password").keydown(function(e) {
 	if (e.which == 13) {
 		SignIn();
@@ -56,13 +87,36 @@ $('#sign-in').click(function(e){
 	e.preventDefault();
 });
 
+$('#password').keyup(function() {
+	updatePasswordIcon();
+});
+
+function validatePassword() {
+	var passwordMinLen = 3;
+	return passwordElement.val().length > passwordMinLen;
+}
+
+function updatePasswordIcon() {
+	var elem = $('#isPasswordValid');
+	if(validatePassword()) {
+		elem
+			.removeClass('glyphicon-minus-sign')
+			.addClass('glyphicon-ok-sign');
+	}
+	else {
+		elem
+			.removeClass('glyphicon-ok-sign')
+			.addClass('glyphicon-minus-sign');
+	}
+}
+
 /*$.getJSON('api/solution/22', function(json) {
 	console.log(json[1]['Id']);
 });*/
 
 function SignIn() {
-	var signInBtn = $("#sign-in");
-	if(signInBtn.hasClass('disabled'))
+	if(	signInBtn.hasClass('disabled')
+		|| !validatePassword())
 	{
 		return;
 	}
@@ -104,7 +158,7 @@ function SignIn() {
 			  }
 			}
 			else {
-				if(data['isEmailValid']) {
+				if(data['isEmailValid'] || data['isPasswordValid']) {
 					signInBtn.removeClass('disabled').text(signInBtnText);
 					$('#sign-up-result').html('<div class="alert alert-error">Wrong Email or Password! Please try again...</div>').hide().slideDown('slow');
 				}

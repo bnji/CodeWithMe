@@ -29,6 +29,7 @@
 	<!--<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 	<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />-->
 	<link href="<?php echo $GLOBALS['urlLibs']; ?>/external/bootstrap/css/bootstrap.css" rel="stylesheet" />
+	<link href="<?php echo $GLOBALS['urlLibs']; ?>/external/bootstrap-select/bootstrap-select.min.css" rel="stylesheet" />
 	<link href="<?php echo $GLOBALS['urlCore']; ?>/view/standard/css/main.css" rel="stylesheet" />
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>

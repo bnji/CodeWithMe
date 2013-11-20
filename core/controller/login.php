@@ -16,8 +16,9 @@ $account = DB::queryFirstRow("SELECT * FROM CWM_User WHERE Email=%?", $email);
 $isNewuser = true;
 $isVerified = false;
 $isEmailValid = verifyEmail($email);
+$isPasswordValid = $hash != sha1("");
 $isFirstTime = 1;
-if($isEmailValid) {
+if($isEmailValid && $isPasswordValid) {
 	// No user found
 	if(is_null($account))
 	{
@@ -40,7 +41,7 @@ if($isEmailValid) {
 		<body>
 		  Thank you for signing up on CodeWithMe!
 		  <br />
-		  Please <a href='" . $activationUrl . $emailHash . "'>activate your account</a>
+		  Please <a href='http://localhost/CodeWithMe/core/controller/activate.php?id=" . $emailHash . "'>activate your account</a>
 		</body>
 		</html>
 		";
@@ -73,6 +74,6 @@ if($isEmailValid) {
 	#$f3->sync('SESSION');
 	#$f3->sync('COOKIE');
 }
-$resultData = array('uid' => $uid, 'uidHash' => $uidHash, 'email' => $email, 'isNew' => $isNewuser, 'isVerified' => $isVerified, 'isEmailValid' => $isEmailValid, 'isFirstTime' => $isFirstTime);
+$resultData = array('uid' => $uid, 'uidHash' => $uidHash, 'email' => $email, 'isNew' => $isNewuser, 'isVerified' => $isVerified, 'isEmailValid' => $isEmailValid, 'isPasswordValid' => $isPasswordValid, 'isFirstTime' => $isFirstTime);
 echo json_encode($resultData);
 ?>

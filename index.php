@@ -1,10 +1,10 @@
 <?php
 session_start();
+
 require_once './core/dirHandler.php';
 require_once $GLOBALS['dirLibs'].'/external/meekrodb.2.2.class.php';
 require_once $GLOBALS['dirCore'].'/dbConfig.inc.php';
 require_once $GLOBALS['dirCore'].'/auth.inc.php';
-
 require_once $GLOBALS['dirRoot'].'/api/ApiAuth.class.php';
 
 $f3=require($GLOBALS['dirLibs'].'/external/fatfree/lib/base.php');
@@ -37,7 +37,17 @@ $f3->route('GET /settings',
 );
 $f3->route('GET /logout',
     function($f3) {
-    	header("Location: core/controller/logout.php");
+        header("Location: core/controller/logout.php");
+    }
+);
+$f3->route('GET /compile',
+    function($f3) {
+        require_once $GLOBALS['dirCore'].'/pages/compileIndex.php';
+    }
+);
+$f3->route('GET /compile/@id',
+    function($f3) {
+        require_once $GLOBALS['dirCore'].'/pages/compileMain.php';
     }
 );
 
