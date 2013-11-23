@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>HTML Real-Time Chat with Spike-Engine, Websockets & JQuery</title>
+    <link rel="stylesheet" href="css/styles.css" type="text/css" />
+</head>
+<body>
+    <script src="js/jquery.min.js" type="application/javascript" ></script>
+    <script src="js/spike-sdk.js.src.js" type="application/javascript" ></script>
+
+
+    <div class="logo"></div>
+
+    <div id="contents">
+        <div id="wrapper">
+            <div class="bubble-container" ></div>
+        </div>
+    </div>
+    <center>
+    <div id="form">
+        <form class="form" onsubmit="sendMessage();return false;" method="get">
+            <input id="msgText" style="width:393px" type="text" />
+            <input type="submit" class="button" value="Send" />
+        </form>
+    </div>
+    </center>
+
+
+    <script>
+        var bubbles = 1;
+        var maxBubbles = 8;
+        var server;
+
+        function sendMessage() {
+            server.sendMyChatMessage($("#msgText").val());
+            $("#msgText").val("");
+        }
+
+        function addBubble(avatar, text) {
+
+            // Get the bytes of the image and convert it to a BASE64 encoded string and then
+            // we use data URI to add dynamically the image data
+            var avatarUri = "data:image/png;base64," + avatar.toBase64();
+
+            var bubble = $('<div class="bubble-container"><span class="bubble"><img class="bubble-avatar" src="' + avatarUri + '" /><div class="bubble-text"><p>' + text + '</p></div><span class="bubble-quote" /></span></div>');
+            $("#msgText").val("");
+
+            $(".bubble-container:last")
+                .after(bubble);
+
+            if (bubbles >= maxBubbles) {
+                var first = $(".bubble-container:first")
+                    .remove();
+                bubbles--;
+            }
+
+            bubbles++;
+            $('.bubble-container').show(250, function showNext() {
+                if (!($(this).is(":visible"))) {
+                    bubbles++;
+                }
+
+                $(this).next(".bubble-container")
+                    .show(250, showNext);
+
+                $("#wrapper").scrollTop(9999999);
+            });
+        }
+
+        // On page loaded and ready
+        $(window).load(function () {
+
+            // First we need to create a server channel on the given URI, in a form http://IP:PORT
+            // For your local test you might try http://127.0.0.1:8002 (or a different IP address/port)
+            server = new ServerChannel('http://10.211.55.5:8002');
+
+            // When the browser is connected to the server, we show that we are connected to the user
+            // and provide a transport name (websockets, flashsockets etc.).
+            server.onConnect(function () {
+                // Once connected, we need to join the chat
+                server.joinMyChat();
+
+            });
+
+
+
+            // Here we hook the room messages inform event so we know when
+            // the server sends us the messages. We need to show them properly in the text area.
+            server.myChatMessagesInform = function (p) {
+                addBubble(p.avatar, p.message);
+            };
+
+        });
+
+    </script>
+
+</body>
+</html>
