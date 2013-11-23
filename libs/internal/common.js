@@ -40,12 +40,5 @@ var CWMCommon = {
 		storage.remove('email');
         storage.remove('isFirstTime');
 		window.location = redirectUrl;
-	},
-	DownloadFile : function(url, contentType) {
-		$('body').append(
-						$('<iframe></iframe>')
-						.attr('src', url + "&contentType=" + contentType)
-						.remove()
-		);
 	}
 }

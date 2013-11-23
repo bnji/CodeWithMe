@@ -22,5 +22,14 @@ var CompileLib = {
         $(id).append(option);
       });
     });
+  },
+  generateFile : function(url, selectId, fileFullName, onSuccess) {
+    $.post(url, {
+            'selectId' : selectId,
+            'fileFullName' : fileFullName
+          })
+          .done(function(data) {
+            onSuccess(data);
+        });
   }
 }

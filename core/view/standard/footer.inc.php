@@ -13,5 +13,6 @@
 	<script src="<?php echo $GLOBALS['urlLibs']; ?>/internal/common.js"></script>
 	<script src="<?php echo $GLOBALS['urlLibs']; ?>/internal/guide.js"></script>
 	<script src="<?php echo $GLOBALS['urlLibs']; ?>/internal/ide/compileLib.js"></script>
+	<script src="<?php echo $GLOBALS['urlLibs']; ?>/internal/fileDownload/fileDownload.js"></script>
 </body>
 <html>

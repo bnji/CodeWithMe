@@ -242,17 +242,16 @@ require_once $GLOBALS['dirCore'].'/view/standard/header.inc.php';
       }, function(data) {
         window.location = data;
       });
-      /*$.post("<?php echo $GLOBALS['urlCore']; ?>/controller/forkSourceDraft.php",
-        {
-          'url' : url
-        })
-        .done(function(data) {
-          window.location = '../compile/'+data;
-        });*/
     });
 
     $('#download').click(function(e) {
-      CWMCommon.DownloadFile("<?php echo $GLOBALS['urlLibs']; ?>/internal/ide/controller/downloadSourceDraft.php?fileName=" + url + "&fileExtension=.txt", "text/plain");
+      fileFullName = "<?php echo $GLOBALS['dirAssets']; ?>/temp/" + url + ".txt";
+      writeln("generating file...");
+      CompileLib.generateFile("<?php echo $GLOBALS['urlLibs']; ?>/internal/ide/controller/generateSourceDraftFile.php", url, fileFullName, function(d) {
+        writeln("wrote: " + d + " bytes!");
+        writeln("downloading file...");
+        $().downloadFile(url, fileFullName, "text/plain");
+      });
     });
 
     $('#compile').click(function(e) {
