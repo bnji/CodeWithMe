@@ -1,12 +1,7 @@
 <?php
-	#session_start();
-	// Turn off all error reporting
-	#error_reporting(0);
-	// Report simple running errors
-	error_reporting(E_ERROR | E_WARNING | E_PARSE);
-	require_once $GLOBALS['dirCore'].'/config.inc.php';
-	require_once $GLOBALS['dirCore'].'/dbConfig.inc.php';
-	require_once $GLOBALS['dirCore'].'/common.inc.php';
+	#require_once $GLOBALS['dirCore'].'/config.inc.php';
+	#require_once $GLOBALS['dirCore'].'/dbConfig.inc.php';
+	#require_once $GLOBALS['dirCore'].'/common.inc.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">

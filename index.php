@@ -1,18 +1,38 @@
 <?php
 session_start();
-
+// Turn off all error reporting
+#error_reporting(0);
+// Report simple running errors
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
 require_once './core/dirHandler.php';
 require_once $GLOBALS['dirLibs'].'/external/meekrodb.2.2.class.php';
-require_once $GLOBALS['dirCore'].'/dbConfig.inc.php';
 require_once $GLOBALS['dirCore'].'/auth.inc.php';
 require_once $GLOBALS['dirRoot'].'/api/ApiAuth.class.php';
+require_once $GLOBALS['dirRoot'].'/api/Object.class.php';
+$apiBaseUrl = '/api/1';
+$dbCfg = $GLOBALS['dirCore'].'/dbConfig.inc.php';
+$f3 = require($GLOBALS['dirLibs'].'/external/fatfree/lib/base.php');
 
-$f3=require($GLOBALS['dirLibs'].'/external/fatfree/lib/base.php');
-//setcookie("uid", "OK", time()+3600, "/");
-//var_dump($_COOKIE);
+if(file_exists($dbCfg)) {
+    require_once $dbCfg;
+}
+else {
+    require_once $GLOBALS['dirCore'].'/pages/install.php';
+}
+
 $f3->route('GET /',
     function($f3) {
-    	require_once $GLOBALS['dirCore'].'/pages/login.php';
+        require_once $GLOBALS['dirCore'].'/pages/login.php';
+    }
+);
+$f3->route('GET /install',
+    function($f3) {
+        if(file_exists($GLOBALS['dirCore'].'/pages/install.php')) {
+            require_once $GLOBALS['dirCore'].'/pages/install.php';
+        }
+        else {
+            header("Location: /");
+        }
     }
 );
 $f3->route('GET /manage',
@@ -52,37 +72,22 @@ $f3->route('GET /compile/@id',
 );
 
 // API
-require_once $GLOBALS['dirRoot'].'/api/Object.class.php';
 
-$apiBaseUrl = '/api/1';
-
-class ApiAuth
-{
-    function get($f3) { }
-    function post($f3) {
-        $data = $f3->get('PARAMS.data');
-        $publicApiKey = $f3->get('PARAMS.key');
-        $hash = $f3->get('PARAMS.hash');
-        echo CWM_API::authorize($data, $publicApiKey, $hash);
-    }
-    function put() {
-    }
-    function delete() {}
-}
-
-//OK
 // Generate public/private key pairs
 $f3->route('GET ' . $apiBaseUrl . '/generate',
     function($f3) {
     	echo CWM_API::generate();
     }
 );
-
-// OK
 // Authorize user
-$f3->map($apiBaseUrl .'/authorize/@data/@key/@hash','ApiAuth');
-
-// OK
+$f3->route('POST ' . $apiBaseUrl . '/authorize/@data/@key/@hash',
+    function($f3) {
+        $data = $f3->get('PARAMS.data');
+        $publicApiKey = $f3->get('PARAMS.key');
+        $hash = $f3->get('PARAMS.hash');
+        echo CWM_API::authorize($data, $publicApiKey, $hash);
+    }
+);
 // Deauthorize user
 $f3->route('POST ' . $apiBaseUrl . '/deauthorize/@tokenValue',
     function($f3) {
@@ -90,8 +95,6 @@ $f3->route('POST ' . $apiBaseUrl . '/deauthorize/@tokenValue',
     	echo CWM_API::deAuthorize($tokenValue);
     }
 );
-
-// OK
 // Get user
 $f3->route('GET ' . $apiBaseUrl . '/user/@tokenValue',
     function($f3) {
@@ -106,8 +109,6 @@ $f3->route('GET ' . $apiBaseUrl . '/user/@tokenValue',
         }
     }
 );
-
-//OK
 // Get user solution
 //GET ' . $apiBaseUrl . '/solution/ConsoleApplication4/99f2cf0ac462b748e050a7bebe11f4f98de00881
 $f3->route('GET ' . $apiBaseUrl . '/solution/@solutionName/@tokenValue',
@@ -123,8 +124,6 @@ $f3->route('GET ' . $apiBaseUrl . '/solution/@solutionName/@tokenValue',
         }
     }
 );
-
-//OK
 // Get list of user solutions
 //http://localhost/CodeWithMe/api/solutions/99f2cf0ac462b748e050a7bebe11f4f98de00881
 $f3->route('GET ' . $apiBaseUrl . '/solutions/@tokenValue',
@@ -136,8 +135,6 @@ $f3->route('GET ' . $apiBaseUrl . '/solutions/@tokenValue',
         echo CWM_API::getAsJson($solutions);
     }
 );
-
-//OK
 // Create solution
 $f3->route('POST ' . $apiBaseUrl . '/solution/create/@tokenValue',
     function($f3) {
@@ -156,8 +153,6 @@ $f3->route('POST ' . $apiBaseUrl . '/solution/create/@tokenValue',
         }
     }
 );
-
-// OK
 // Returns a project
 $f3->route('GET ' . $apiBaseUrl . '/project/@solutionId/@tokenValue',
     function($f3) {
@@ -172,8 +167,6 @@ $f3->route('GET ' . $apiBaseUrl . '/project/@solutionId/@tokenValue',
         }
     }
 );
-
-// OK
 // Get solution projects
 $f3->route('GET ' . $apiBaseUrl . '/projects/@solutionId/@tokenValue',
     function($f3) {
@@ -183,8 +176,6 @@ $f3->route('GET ' . $apiBaseUrl . '/projects/@solutionId/@tokenValue',
         echo CWM_API::getAsJson($projects);
     }
 );
-
-// OK
 // Create project and adds a relation between solution and the project
 $f3->route('POST ' . $apiBaseUrl . '/project/create/@tokenValue',
     function($f3) {
@@ -205,8 +196,6 @@ $f3->route('POST ' . $apiBaseUrl . '/project/create/@tokenValue',
         }
     }
 );
-
-// OK
 // Not used... needed?
 $f3->route('POST ' . $apiBaseUrl . '/solution/addProject/@tokenValue',
     function($f3) {
@@ -223,8 +212,6 @@ $f3->route('POST ' . $apiBaseUrl . '/solution/addProject/@tokenValue',
         #echo CWM_Solution::AddProject($solutionId, $projectId, $tokenValue);
     }
 );
-
-// OK
 // Get project files
 $f3->route('GET ' . $apiBaseUrl . '/files/@projectId/@tokenValue',
     function($f3) {
@@ -235,8 +222,6 @@ $f3->route('GET ' . $apiBaseUrl . '/files/@projectId/@tokenValue',
         echo CWM_API::getAsJson($files);
     }
 );
-
-// OK
 // Get a file by file ID
 $f3->route('GET ' . $apiBaseUrl . '/file/@fileId/@tokenValue',
     function($f3) {
@@ -247,8 +232,6 @@ $f3->route('GET ' . $apiBaseUrl . '/file/@fileId/@tokenValue',
         echo CWM_API::getAsJson($file);
     }
 );
-
-// OK
 // Get a file by project ID and file name
 $f3->route('GET ' . $apiBaseUrl . '/file/@projectId/@fileName/@tokenValue',
     function($f3) {
@@ -260,8 +243,6 @@ $f3->route('GET ' . $apiBaseUrl . '/file/@projectId/@fileName/@tokenValue',
         echo CWM_API::getAsJson($file);
     }
 );
-
-// OK
 // Create a file
 $f3->route('POST ' . $apiBaseUrl . '/file/create/@tokenValue',
     function($f3) {
@@ -284,8 +265,6 @@ $f3->route('POST ' . $apiBaseUrl . '/file/create/@tokenValue',
         }
     }
 );
-
-// OK
 // Update a file
 $f3->route('PUT ' . $apiBaseUrl . '/file/update/@tokenValue',
     function($f3) {
@@ -298,8 +277,6 @@ $f3->route('PUT ' . $apiBaseUrl . '/file/update/@tokenValue',
         echo CWM_File::update($fileId, $fileName, $fileData, $tokenValue);
     }
 );
-
-// OK
 // Delete a file
 $f3->route('POST ' . $apiBaseUrl . '/file/delete/@tokenValue',
     function($f3) {
