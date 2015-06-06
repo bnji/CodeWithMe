@@ -169,6 +169,7 @@ function SignIn() {
 			}
 
 		}).fail(function(jqXHR, textStatus) {
+			console.log(jqXHR);
 			alert( "Request failed: " + textStatus );
 		});
 	}

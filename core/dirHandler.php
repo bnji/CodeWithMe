@@ -9,7 +9,7 @@
     $pathinfo = pathinfo(__DIR__);
     $urlRoot = $pathinfo['dirname'];
     $urlRoot = str_replace("\\", "/", $urlRoot); // windows fix
-    $urlRoot = substr($urlRoot, strrpos($urlRoot, '/'), strlen($urlRoot)); //fix for str_replace, as it is different on windows (wamp) and osx (mamp)!!!
+    $urlRoot = substr($urlRoot, strrpos($_SERVER['DOCUMENT_ROOT'].'/', '/'), strlen($urlRoot)); //fix for str_replace, as it is different on windows (wamp) and osx (mamp)!!!
     $dirRoot = $_SERVER['DOCUMENT_ROOT'].$urlRoot;
 
     // Creates e.g. dirCore and urlCore variables, which would become

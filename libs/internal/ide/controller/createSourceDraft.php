@@ -14,14 +14,14 @@
 	$content = $_POST['content'];
 	$theme = $_POST['theme'];
 
-	$templateData = $compileLib->ExtractProject($language, $randomHashUrl);
+	$templateData = $compileLib->extractProject($language, $randomHashUrl);
 
 	if(strlen($content) == 0) {
 		$content = $templateData;
 	}
 
 	/*if(strlen($content) == 0) {
-		$content = $compileLib->GetFile($language);
+		$content = $compileLib->getFile($language);
 	}*/
 
 	DB::insert('CWM_SourceDraft', array(

@@ -2,27 +2,24 @@
 
 class CompileLib
 {
-	public function GetFile($language) {
-		$filename = $GLOBALS['dirLibs'].'/internal/ide/code_templates/'.$language;
-		#$handle = fopen($filename, "rb");
-		#$data = fread($handle, filesize($filename));
-		#fclose($handle);
-		#return htmlentities($data);
-		return file_get_contents($filename);
+	public function getFile($language) {
+		return file_get_contents($GLOBALS['dirLibs'].'/internal/ide/code_templates/'.$language);
 	}
 
-	public function ExtractProject($language, $projectName) {
+	public function extractProject($language, $projectName) {
 		$baseDir = $GLOBALS['dirLibs'].'/internal/ide';
+		$langDir = $baseDir.'/code_output/'.$language;
 		$file = $baseDir.'/code_templates/'.$language.'.zip';
-		$destDir = $baseDir.'/code_output/'.$language.'/'.$projectName;
+		$destDir = $langDir.'/'.$projectName;
+		$this->createDir($langDir);
 		$mainFile = $baseDir.'/code_output/'.$language.'/'.$projectName.'/main_template_file';
-		$result = $this->ExtractFile($file, $destDir);
+		$result = $this->extractFile($file, $destDir);
 		if($result == 1) {
 			return file_get_contents($mainFile);
 		}
 	}
 
-	public function ExtractFile($file, $destDir) {
+	public function extractFile($file, $destDir) {
 		$zip = new ZipArchive;
 		if ($zip->open($file) === TRUE) {
 		    $zip->extractTo($destDir);
@@ -31,6 +28,15 @@ class CompileLib
 		} else {
 		    return false;
 		}
+	}
+
+	private function createDir($dir)
+	{
+		if(!is_dir($dir) && !is_file($dir))
+		{
+			return mkdir($dir);
+		}
+		return false;
 	}
 }
 

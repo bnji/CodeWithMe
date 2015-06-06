@@ -20,6 +20,12 @@ else {
     require_once $GLOBALS['dirCore'].'/pages/install.php';
 }
 
+
+#require_once $GLOBALS['dirLibs'].'/internal/ide/compileLib.inc.php';
+#$compileLib = new CompileLib();
+#$randomHashUrl = mt_rand_str(11, '0123456789abcdefghijklmnoprstuvwqxyzABCDEFGHIJKLMNOPRSTUVWQXYZ');
+#$templateData = $compileLib->ExtractProject('csharp', $randomHashUrl);
+
 $f3->route('GET /',
     function($f3) {
         require_once $GLOBALS['dirCore'].'/pages/login.php';
